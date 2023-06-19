@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if request.user.id == post.user.id %} 
+    <a href="{% url 'shop:delete' post.id %}" class="btn btn-danger">Delete</a>
+{% endif %} 
+
+
+{% if request.user.id == post.user.id %}
+    <a href="{% url 'shop:edit' post.id %}" class="btn btn-primary">Edit</a><br/>
+{% endif %}
+
+
+from: <a href="{% url 'accounts:profile' post.user.id %}" class="btn btn-primary">{{ post.user }}</a><hr/>
+
+title: {{ post.title }}<br/>
+info: {{ post.description}}<br/>
+category: {{ post.category}}<br/>
+price: {{ post.current_price }}<br/>
+owner until now: {{ post.owner }}<hr/>
+
+<a href="{% url 'shop:like' post.id %}" class="{% if not can_like %}disabled {% endif %} btn btn-primary">Like {{ post.like_count }}</a>
+<hr/>
+do you wanna be the owner? commit a new bid :D 
+<a href="{% url 'shop:bid' post.id %}" class="btn btn-info">Commit a new bid</a>
+<hr/>
+
+{% if request.user.is_authenticated %}
+
+    <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_div }}<br/>
+    <input type="submit" value="Send">
+    </form><br/>
+
+{% else %}
+    <p>only logged in users can comment</p>
+{% endif %}
+
+{% for comment in comments %}
+<div class="card bg-dark text-white">
+    <p class="card-header">{{ comment.user }} | {{ comment.created|timesince }}</p>
+    <p class="card-body">{{ comment.body }}</p>
+
+        {% if request.user.is_authenticated %}
+            <form action="{% url 'shop:reply' post.id comment.id %}" method="post">
+                {% csrf_token %}
+                {{ reply_form.as_div }}
+                <input type="submit" value="add">
+            </form>
+        {% endif %}
+
+        {% with replies=comment.replies.all %}
+        {% for reply in replies %}
+                <p class="bg-primary p-3 m-2">{{ reply.user}} <br/> {{ reply.body }}</p>
+        {% endfor %}
+        {% endwith %}
+
+</div><br/>
+{% empty %}
+    <p>NO comments yet!</p>
+{% endfor %}
+
+{% endblock %}

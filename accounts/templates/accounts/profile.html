@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2 class="text-center">{{ user.username }}</h2>
+    <hr/>
+
+
+    {% if request.user.id == user.id %}
+        <a href="{% url 'accounts:edit_user' %}" class="btn btn-info col-md-2">Edit Profile</a>
+    {% endif %}
+
+
+    {% if request.user.id != user.id and is_following %}
+        <a href="{% url 'accounts:unfollow' user.id %}" class="btn btn-info">Unfollow</a>
+    {% elif request.user.id != user.id  and not is_following %}
+        <a href="{% url 'accounts:follow' user.id %}" class="btn btn-info">Follow</a>
+    {% endif %} 
+
+    
+    <hr/>
+    <h5>Followers:</h5>
+    <a href="{% url 'accounts:get_followers' user.id %}">{{ followed }}</a><br/>
+    <h5>Followings:</h5>
+    <a href="{% url 'accounts:get_followings' user.id %}">{{ following }}</a>
+    <hr/>
+
+
+    <h3>Posts: </h3>
+    {% for post in posts %}
+        <a href="{% url 'shop:detail' post.id %}">{{ post.title }}</a>
+    {% endfor %}
+    
+{% endblock %}
