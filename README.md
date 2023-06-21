@@ -1,6 +1,6 @@
 # Warming up with django. 
 
-## introducing to my first project in django , called social media
+## introduction
 
 _project overview:_
 
