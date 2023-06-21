@@ -2,7 +2,7 @@
 
 ## introducing to my first project in django , called social media
 
-* project overview: *
+_project overview:_
 
 + Register, Login, Logout, via User model
 + used signals
